@@ -2,20 +2,23 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Message, QuickReply, initialGreeting, quickReplies, getRandomResponse } from '../utils/chatMessages';
 import { getProductsByConcern } from '../utils/productData';
+import { getSkinAnalysisByConcern } from '../utils/skinAnalysisData';
 import ProductCard from './ProductCard';
+import SkinAnalysisReport from './SkinAnalysisReport';
 import { MessageCircle } from 'lucide-react';
 
 const ChatInterface: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([initialGreeting]);
   const [showQuickReplies, setShowQuickReplies] = useState(true);
   const [showProducts, setShowProducts] = useState(false);
+  const [showAnalysisReport, setShowAnalysisReport] = useState(false);
   const [selectedConcern, setSelectedConcern] = useState<'dry' | 'acne' | 'brightening' | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto scroll to bottom of messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [messages, showAnalysisReport]);
 
   const handleQuickReply = (reply: QuickReply) => {
     // Add user message
@@ -42,6 +45,23 @@ const ChatInterface: React.FC = () => {
       setMessages(prev => [...prev, botResponse]);
       setSelectedConcern(reply.concern);
       setShowProducts(true);
+      
+      // Add another message after products about skin analysis
+      setTimeout(() => {
+        const analysisMessage: Message = {
+          id: `bot-analysis-${Date.now()}`,
+          sender: 'bot',
+          text: 'Dựa vào thông tin bạn cung cấp, mình đã phân tích làn da của bạn. Hãy xem báo cáo chi tiết dưới đây nhé! ✨',
+          timestamp: new Date(),
+        };
+        
+        setMessages(prev => [...prev, analysisMessage]);
+        
+        // Show skin analysis report after a short delay
+        setTimeout(() => {
+          setShowAnalysisReport(true);
+        }, 800);
+      }, 3000);
     }, 1000);
   };
 
@@ -97,6 +117,13 @@ const ChatInterface: React.FC = () => {
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
+          </div>
+        )}
+        
+        {/* Skin Analysis Report */}
+        {showAnalysisReport && selectedConcern && (
+          <div className="my-6">
+            <SkinAnalysisReport data={getSkinAnalysisByConcern(selectedConcern)} />
           </div>
         )}
         
