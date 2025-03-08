@@ -44,9 +44,8 @@ const ChatInterface: React.FC = () => {
       
       setMessages(prev => [...prev, botResponse]);
       setSelectedConcern(reply.concern);
-      setShowProducts(true);
       
-      // Add another message after products about skin analysis
+      // Add analysis message and show analysis report first
       setTimeout(() => {
         const analysisMessage: Message = {
           id: `bot-analysis-${Date.now()}`,
@@ -57,11 +56,24 @@ const ChatInterface: React.FC = () => {
         
         setMessages(prev => [...prev, analysisMessage]);
         
-        // Show skin analysis report after a short delay
+        // Show skin analysis report first
         setTimeout(() => {
           setShowAnalysisReport(true);
+          
+          // After showing the analysis, add product recommendation message
+          setTimeout(() => {
+            const productMessage: Message = {
+              id: `bot-product-${Date.now()}`,
+              sender: 'bot',
+              text: 'Và đây là những sản phẩm mình đề xuất phù hợp với tình trạng da của bạn:',
+              timestamp: new Date(),
+            };
+            
+            setMessages(prev => [...prev, productMessage]);
+            setShowProducts(true);
+          }, 1500);
         }, 800);
-      }, 3000);
+      }, 1500);
     }, 1000);
   };
 
@@ -106,7 +118,14 @@ const ChatInterface: React.FC = () => {
           </div>
         )}
         
-        {/* Product recommendations */}
+        {/* Skin Analysis Report - now displayed before product recommendations */}
+        {showAnalysisReport && selectedConcern && (
+          <div className="my-6">
+            <SkinAnalysisReport data={getSkinAnalysisByConcern(selectedConcern)} />
+          </div>
+        )}
+        
+        {/* Product recommendations - now displayed after skin analysis */}
         {showProducts && selectedConcern && (
           <div className="my-6">
             <div className="mb-2 font-semibold text-sm text-lilac-700">
@@ -117,13 +136,6 @@ const ChatInterface: React.FC = () => {
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
-          </div>
-        )}
-        
-        {/* Skin Analysis Report */}
-        {showAnalysisReport && selectedConcern && (
-          <div className="my-6">
-            <SkinAnalysisReport data={getSkinAnalysisByConcern(selectedConcern)} />
           </div>
         )}
         
