@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Search, X, MessageCircle, ChevronRight, Menu } from 'lucide-react';
+import { Search, X, MessageCircle, ChevronRight } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { 
   Sidebar, 
@@ -121,8 +121,8 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
                         </div>
                       </div>
                     ) : (
-                      <SidebarMenuButton
-                        className={`relative ${activeChatId === chat.id ? 'bg-lilac-100' : ''}`}
+                      <div 
+                        className={`relative rounded-md p-2 hover:bg-lilac-50 cursor-pointer ${activeChatId === chat.id ? 'bg-lilac-100' : ''}`}
                         onClick={() => onChatSelect(chat.id)}
                       >
                         <div className="flex items-center">
@@ -140,7 +140,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
                           </div>
                         </div>
                         <button 
-                          className="absolute right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 hover:opacity-100 transition-opacity"
                           onClick={(e) => {
                             e.stopPropagation();
                             setConfirmDelete(chat.id);
@@ -153,7 +153,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
                             <span className="text-xs bg-lilac-100 p-1 rounded text-lilac-700">🖼️</span>
                           </div>
                         )}
-                      </SidebarMenuButton>
+                      </div>
                     )}
                   </SidebarMenuItem>
                 ))}
