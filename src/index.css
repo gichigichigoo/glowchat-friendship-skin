@@ -79,7 +79,7 @@
   }
   
   .quick-reply-btn {
-    @apply px-4 py-2 rounded-full bg-white border border-lilac-200 text-sm font-medium text-lilac-800 hover:bg-lilac-50 hover:border-lilac-400 transition-all duration-200 shadow-sm hover:shadow animate-pulse-subtle whitespace-nowrap;
+    @apply px-4 py-2 rounded-full bg-white border border-lilac-200 text-sm font-medium text-lilac-800 hover:bg-lilac-50 hover:border-lilac-400 transition-all duration-200 shadow-sm hover:shadow mx-1;
   }
   
   .product-card {
@@ -114,7 +114,7 @@
     @apply bg-gradient-to-r from-transparent via-white/30 to-transparent bg-[length:200%_100%] animate-shimmer;
   }
   
-  /* New styles for chat input and sidebar components */
+  /* Sidebar styles */
   .sidebar-category {
     @apply text-xs font-medium text-muted-foreground uppercase tracking-wider px-4 py-2;
   }
@@ -133,5 +133,23 @@
   
   .chat-image-delete {
     @apply absolute top-1 right-1 bg-white rounded-full p-1 shadow-sm hover:bg-red-50 transition-colors;
+  }
+  
+  /* Chat container styles for better centering and alignment */
+  .chat-container {
+    @apply flex-1 flex flex-col max-w-2xl mx-auto w-full;
+  }
+  
+  /* Carousel customization for quick replies */
+  .carousel-container {
+    @apply relative py-2;
+  }
+  
+  .carousel-content {
+    @apply flex gap-2 overflow-x-auto scrollbar-hide;
+  }
+  
+  .carousel-nav-button {
+    @apply absolute top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-1 shadow-sm hover:bg-lilac-50;
   }
 }

@@ -86,14 +86,15 @@ const Index = () => {
               onDeleteChat={handleDeleteChat}
               activeChatId={selectedChatId}
             />
-            <main className="flex-1 max-w-lg w-full mx-auto p-4 flex flex-col">
-              <ChatInterface />
-              
-              {streakCount > 0 && (
-                <div className="mt-auto">
-                  <StreakCounter streakCount={streakCount} />
-                </div>
-              )}
+            <main className="flex-1 flex flex-col relative">
+              <div className="max-w-lg w-full mx-auto p-4 flex flex-col">
+                {streakCount > 0 && (
+                  <div className="mb-4">
+                    <StreakCounter streakCount={streakCount} />
+                  </div>
+                )}
+                <ChatInterface />
+              </div>
             </main>
           </div>
         </SidebarProvider>

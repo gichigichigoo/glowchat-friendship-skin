@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Message, QuickReply, initialGreeting, quickReplies, getRandomResponse } from '../utils/chatMessages';
 import { getProductsByConcern } from '../utils/productData';
@@ -6,6 +7,7 @@ import ProductCard from './ProductCard';
 import SkinAnalysisReport from './SkinAnalysisReport';
 import ChatInputBox from './ChatInputBox';
 import { useToast } from '@/hooks/use-toast';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 const ChatInterface: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([initialGreeting]);
@@ -204,7 +206,7 @@ const ChatInterface: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full max-w-md mx-auto">
+    <div className="flex flex-col h-full relative">
       <div className="bg-lilac-500 text-white p-4 rounded-b-2xl shadow-lg mb-4">
         <div className="flex items-center space-x-2">
           <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
@@ -228,16 +230,23 @@ const ChatInterface: React.FC = () => {
         ))}
         
         {showQuickReplies && (
-          <div className="flex gap-2 overflow-x-auto py-4 px-2 after:content-[''] after:min-w-[1rem]">
-            {quickReplies.map((reply) => (
-              <button
-                key={reply.id}
-                className="quick-reply-btn animate-pulse-subtle"
-                onClick={() => handleQuickReply(reply)}
-              >
-                {reply.text} {reply.emoji}
-              </button>
-            ))}
+          <div className="py-4 px-2">
+            <Carousel className="w-full">
+              <CarouselContent>
+                {quickReplies.map((reply) => (
+                  <CarouselItem key={reply.id} className="basis-auto">
+                    <button
+                      className="quick-reply-btn animate-pulse-subtle whitespace-nowrap"
+                      onClick={() => handleQuickReply(reply)}
+                    >
+                      {reply.text} {reply.emoji}
+                    </button>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="left-0 bg-white/80" />
+              <CarouselNext className="right-0 bg-white/80" />
+            </Carousel>
           </div>
         )}
         
@@ -263,7 +272,7 @@ const ChatInterface: React.FC = () => {
         <div ref={messagesEndRef} />
       </div>
       
-      <div className="fixed bottom-0 left-0 right-0 mb-2 md:max-w-md md:mx-auto px-2">
+      <div className="fixed bottom-0 left-0 right-0 mb-2 md:max-w-lg md:mx-auto px-2">
         <ChatInputBox
           onSendMessage={handleSendMessage}
           onSendImage={handleSendImage}
