@@ -113,4 +113,25 @@
   .shimmer-effect {
     @apply bg-gradient-to-r from-transparent via-white/30 to-transparent bg-[length:200%_100%] animate-shimmer;
   }
+  
+  /* New styles for chat input and sidebar components */
+  .sidebar-category {
+    @apply text-xs font-medium text-muted-foreground uppercase tracking-wider px-4 py-2;
+  }
+  
+  .sidebar-item {
+    @apply flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-lilac-50 transition-colors;
+  }
+  
+  .sidebar-item.active {
+    @apply bg-lilac-100 text-lilac-800;
+  }
+  
+  .chat-image-preview {
+    @apply relative inline-block rounded-md overflow-hidden border border-lilac-200 mb-2;
+  }
+  
+  .chat-image-delete {
+    @apply absolute top-1 right-1 bg-white rounded-full p-1 shadow-sm hover:bg-red-50 transition-colors;
+  }
 }
