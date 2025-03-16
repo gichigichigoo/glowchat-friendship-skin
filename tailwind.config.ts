@@ -142,6 +142,11 @@ export default {
 				'float': {
 					'0%, 100%': { transform: 'translateY(0)' },
 					'50%': { transform: 'translateY(-5px)' }
+				},
+				'shake': {
+					'0%, 100%': { transform: 'translateX(0)' },
+					'10%, 30%, 50%, 70%, 90%': { transform: 'translateX(-5px)' },
+					'20%, 40%, 60%, 80%': { transform: 'translateX(5px)' }
 				}
 			},
 			animation: {
@@ -152,7 +157,8 @@ export default {
 				'slide-up': 'slide-up 0.4s ease-out',
 				'slide-in-right': 'slide-in-right 0.4s ease-out',
 				'shimmer': 'shimmer 2.5s infinite linear',
-				'float': 'float 3s ease-in-out infinite'
+				'float': 'float 3s ease-in-out infinite',
+				'shake': 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both'
 			}
 		}
 	},
