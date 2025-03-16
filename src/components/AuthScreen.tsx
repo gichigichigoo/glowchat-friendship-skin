@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { Eye, EyeOff, Mail, Lock, AlertCircle } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
@@ -54,42 +53,22 @@ const AuthScreen: React.FC<{ onAuthSuccess: () => void }> = ({ onAuthSuccess }) 
       return;
     }
 
+    // Accept any password for now to allow easy testing
     if (mode === 'login') {
-      // Simulate login logic
-      // In a real app, you would call an auth API here
-      if (password === 'demo123') {
-        toast({
-          title: "Đăng nhập thành công!",
-          description: "Chào mừng bạn quay trở lại!",
-        });
-        onAuthSuccess();
-      } else {
-        setIsPasswordValid(false);
-        // Shake animation trigger
-        if (passwordRef.current) {
-          passwordRef.current.classList.add('animate-shake');
-          setTimeout(() => {
-            if (passwordRef.current) {
-              passwordRef.current.classList.remove('animate-shake');
-            }
-          }, 500);
-        }
-        toast({
-          title: "Oops!",
-          description: "Mật khẩu không đúng. Hãy thử lại hoặc nhấn 'Quên mật khẩu?' để đặt lại nhé.",
-          variant: "destructive",
-        });
-      }
+      // Allow any password to pass through
+      toast({
+        title: "Đăng nhập thành công!",
+        description: "Chào mừng bạn quay trở lại!",
+      });
+      onAuthSuccess();
     } else {
-      // Simulate signup
+      // Simulate signup success
       toast({
         title: "Đăng ký thành công!",
-        description: "Vui lòng kiểm tra email của bạn để xác nhận tài khoản.",
+        description: "Bạn đã được đăng nhập tự động.",
       });
-      // In a real app, you would call a registration API here
-      setTimeout(() => {
-        setMode('login');
-      }, 2000);
+      // Auto-login after signup for easier testing
+      onAuthSuccess();
     }
   };
 
