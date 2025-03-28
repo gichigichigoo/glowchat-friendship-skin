@@ -1,4 +1,3 @@
-
 import { ChatHistory } from '@/components/ChatSidebar';
 
 // Simulated chat history for initial testing
@@ -91,4 +90,9 @@ export const deleteChat = (chatId: string): void => {
   const history = loadChatHistory();
   const updatedHistory = history.filter(chat => chat.id !== chatId);
   saveChatHistory(updatedHistory);
+};
+
+// Delete all chats from history
+export const deleteAllChats = (): void => {
+  localStorage.setItem('chatHistory', JSON.stringify([]));
 };

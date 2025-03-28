@@ -6,7 +6,7 @@ import AuthScreen from '@/components/AuthScreen';
 import ChatSidebar from '@/components/ChatSidebar';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { useToast } from '@/hooks/use-toast';
-import { loadChatHistory, deleteChat } from '@/utils/chatHistoryService';
+import { loadChatHistory, deleteChat, deleteAllChats } from '@/utils/chatHistoryService';
 import { ChatHistory } from '@/components/ChatSidebar';
 
 const Index = () => {
@@ -72,6 +72,26 @@ const Index = () => {
       duration: 3000,
     });
   };
+  
+  const handleDeleteAllChats = () => {
+    deleteAllChats();
+    setChatHistory([]);
+    toast({
+      title: "Đã xóa tất cả cuộc trò chuyện",
+      description: "Tất cả cuộc trò chuyện đã được xóa thành công",
+      duration: 3000,
+    });
+  };
+  
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('isAuthenticated');
+    toast({
+      title: "Đã đăng xuất",
+      description: "Bạn đã đăng xuất thành công",
+      duration: 3000,
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-lilac-50 to-peach-50">
@@ -84,6 +104,8 @@ const Index = () => {
               chatHistory={chatHistory}
               onChatSelect={handleChatSelect}
               onDeleteChat={handleDeleteChat}
+              onDeleteAllChats={handleDeleteAllChats}
+              onLogout={handleLogout}
               activeChatId={selectedChatId}
             />
             <main className="flex-1 flex flex-col relative">
