@@ -11,7 +11,8 @@ import {
   Shield, 
   ChevronDown,
   ChevronRight,
-  Info
+  Info,
+  Check
 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -19,6 +20,7 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface SettingsModalProps {
   open: boolean;
@@ -43,6 +45,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   const [includeVideo, setIncludeVideo] = useState(false);
   const [showModelDialog, setShowModelDialog] = useState(false);
   const [confirmDeleteAccount, setConfirmDeleteAccount] = useState(false);
+  const [selectedTheme, setSelectedTheme] = useState('system');
+  const [openThemeDropdown, setOpenThemeDropdown] = useState(false);
+  const [openLanguageDropdown, setOpenLanguageDropdown] = useState(false);
+  const [customInstructions, setCustomInstructions] = useState(true);
   
   const handleArchiveAll = () => {
     toast({
@@ -85,6 +91,21 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
       duration: 3000,
     });
   };
+  
+  const themes = [
+    { id: 'system', label: 'System' },
+    { id: 'light', label: 'Light' },
+    { id: 'dark', label: 'Dark' }
+  ];
+  
+  const languages = [
+    { id: 'auto', label: 'Auto-detect' },
+    { id: 'en', label: 'English' },
+    { id: 'vi', label: 'Vietnamese' },
+    { id: 'fr', label: 'French' },
+    { id: 'de', label: 'German' },
+    { id: 'es', label: 'Spanish' }
+  ];
   
   return (
     <>
@@ -133,10 +154,31 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <h3 className="text-lg font-medium">Theme</h3>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm">System</span>
-                        <ChevronDown size={16} />
-                      </div>
+                      <Collapsible 
+                        open={openThemeDropdown} 
+                        onOpenChange={setOpenThemeDropdown}
+                        className="border rounded-md"
+                      >
+                        <CollapsibleTrigger className="flex justify-between items-center w-full p-2 text-left">
+                          <span className="text-sm">{themes.find(t => t.id === selectedTheme)?.label}</span>
+                          <ChevronDown size={16} className={`transition-transform duration-200 ${openThemeDropdown ? 'rotate-180' : ''}`} />
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="border-t">
+                          {themes.map(theme => (
+                            <div 
+                              key={theme.id}
+                              className="flex justify-between items-center p-2 hover:bg-muted/50 cursor-pointer"
+                              onClick={() => {
+                                setSelectedTheme(theme.id);
+                                setOpenThemeDropdown(false);
+                              }}
+                            >
+                              <span>{theme.label}</span>
+                              {selectedTheme === theme.id && <Check size={16} className="text-lilac-500" />}
+                            </div>
+                          ))}
+                        </CollapsibleContent>
+                      </Collapsible>
                     </div>
                     
                     <div className="space-y-4">
@@ -153,10 +195,31 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                     
                     <div className="space-y-2">
                       <h3 className="text-lg font-medium">Language</h3>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm">Auto-detect</span>
-                        <ChevronDown size={16} />
-                      </div>
+                      <Collapsible 
+                        open={openLanguageDropdown} 
+                        onOpenChange={setOpenLanguageDropdown}
+                        className="border rounded-md"
+                      >
+                        <CollapsibleTrigger className="flex justify-between items-center w-full p-2 text-left">
+                          <span className="text-sm">{languages.find(l => l.id === language)?.label}</span>
+                          <ChevronDown size={16} className={`transition-transform duration-200 ${openLanguageDropdown ? 'rotate-180' : ''}`} />
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="border-t max-h-40 overflow-y-auto">
+                          {languages.map(lang => (
+                            <div 
+                              key={lang.id}
+                              className="flex justify-between items-center p-2 hover:bg-muted/50 cursor-pointer"
+                              onClick={() => {
+                                setLanguage(lang.id);
+                                setOpenLanguageDropdown(false);
+                              }}
+                            >
+                              <span>{lang.label}</span>
+                              {language === lang.id && <Check size={16} className="text-lilac-500" />}
+                            </div>
+                          ))}
+                        </CollapsibleContent>
+                      </Collapsible>
                     </div>
                     
                     <div className="space-y-2">
@@ -198,8 +261,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                         <h3 className="text-lg font-medium">Custom instructions</h3>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span>On</span>
-                        <ChevronRight size={16} />
+                        <Switch checked={customInstructions} onCheckedChange={setCustomInstructions} />
                       </div>
                     </div>
 
@@ -239,6 +301,28 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                   </div>
                 </TabsContent>
                 
+                <TabsContent value="speech" className="p-4 mt-0">
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium">Voice mode</h3>
+                    
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <span>Include your audio recordings</span>
+                        <Switch checked={includeAudio} onCheckedChange={setIncludeAudio} />
+                      </div>
+                      
+                      <div className="flex justify-between items-center">
+                        <span>Include your video recordings</span>
+                        <Switch checked={includeVideo} onCheckedChange={setIncludeVideo} />
+                      </div>
+                      
+                      <p className="text-sm text-muted-foreground mt-2">
+                        Include your audio and video recordings from Voice Mode to train our models. Transcripts and other files are covered by "Improve the model for everyone." <a href="#" className="text-blue-500 hover:underline">Learn more</a>
+                      </p>
+                    </div>
+                  </div>
+                </TabsContent>
+                
                 <TabsContent value="data" className="p-4 mt-0 space-y-6">
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
@@ -246,10 +330,18 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                         <h3 className="text-lg font-medium">Improve the model for everyone</h3>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span>On</span>
-                        <ChevronRight size={16} onClick={() => setShowModelDialog(true)} className="cursor-pointer" />
+                        <Switch checked={improveModel} onCheckedChange={setImproveModel} />
+                        <ChevronRight 
+                          size={16} 
+                          onClick={() => setShowModelDialog(true)} 
+                          className="cursor-pointer"
+                        />
                       </div>
                     </div>
+                    
+                    <p className="text-sm text-muted-foreground">
+                      Allow your content to be used to train our models, which makes ChatGPT better for you and everyone who uses it. We take steps to protect your privacy.
+                    </p>
                     
                     <div className="space-y-4 pt-4 border-t">
                       <div className="flex justify-between items-center">
@@ -279,43 +371,70 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                   </div>
                 </TabsContent>
                 
-                <TabsContent value="speech" className="p-4 mt-0">
+                <TabsContent value="profile" className="p-4 mt-0">
                   <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Voice mode</h3>
+                    <h3 className="text-lg font-medium">Builder profile</h3>
+                    <p className="text-muted-foreground">Customize how you appear to other users when building with ChatGPT</p>
                     
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-center">
-                        <span>Include your audio recordings</span>
-                        <Switch checked={includeAudio} onCheckedChange={setIncludeAudio} />
+                    <div className="space-y-4 bg-muted/40 p-4 rounded-md mt-2">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-full bg-lilac-100 flex items-center justify-center">
+                          <UserCircle size={24} className="text-lilac-500" />
+                        </div>
+                        <div>
+                          <h4 className="font-medium">Display name</h4>
+                          <p className="text-sm text-muted-foreground">User128964</p>
+                        </div>
+                        <Button variant="outline" className="ml-auto">Edit</Button>
                       </div>
-                      
-                      <div className="flex justify-between items-center">
-                        <span>Include your video recordings</span>
-                        <Switch checked={includeVideo} onCheckedChange={setIncludeVideo} />
-                      </div>
-                      
-                      <p className="text-sm text-muted-foreground mt-2">
-                        Include your audio and video recordings from Voice Mode to train our models. Transcripts and other files are covered by "Improve the model for everyone." <a href="#" className="text-blue-500 hover:underline">Learn more</a>
-                      </p>
                     </div>
                   </div>
                 </TabsContent>
                 
-                <TabsContent value="profile" className="p-4 mt-0">
-                  <div className="flex items-center justify-center h-32">
-                    <p className="text-muted-foreground">Builder profile settings will be available soon</p>
-                  </div>
-                </TabsContent>
-                
                 <TabsContent value="apps" className="p-4 mt-0">
-                  <div className="flex items-center justify-center h-32">
-                    <p className="text-muted-foreground">Connected apps settings will be available soon</p>
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium">Connected applications</h3>
+                    <p className="text-muted-foreground">Manage apps that can access your ChatGPT account</p>
+                    
+                    <div className="border rounded-md p-4 mt-4">
+                      <p className="text-center text-muted-foreground">No connected applications</p>
+                    </div>
+                    
+                    <Button variant="outline" className="w-full mt-4">
+                      Connect a new application
+                    </Button>
                   </div>
                 </TabsContent>
                 
                 <TabsContent value="security" className="p-4 mt-0">
-                  <div className="flex items-center justify-center h-32">
-                    <p className="text-muted-foreground">Security settings will be available soon</p>
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium">Security settings</h3>
+                    
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center p-4 border rounded-md">
+                        <div>
+                          <h4 className="font-medium">Two-factor authentication</h4>
+                          <p className="text-sm text-muted-foreground">Add an extra layer of security to your account</p>
+                        </div>
+                        <Button variant="outline">Enable</Button>
+                      </div>
+                      
+                      <div className="flex justify-between items-center p-4 border rounded-md">
+                        <div>
+                          <h4 className="font-medium">Active sessions</h4>
+                          <p className="text-sm text-muted-foreground">Manage devices where you're currently logged in</p>
+                        </div>
+                        <Button variant="outline">Manage</Button>
+                      </div>
+                      
+                      <div className="flex justify-between items-center p-4 border rounded-md">
+                        <div>
+                          <h4 className="font-medium">Password</h4>
+                          <p className="text-sm text-muted-foreground">Last changed 3 months ago</p>
+                        </div>
+                        <Button variant="outline">Change</Button>
+                      </div>
+                    </div>
                   </div>
                 </TabsContent>
               </Tabs>
