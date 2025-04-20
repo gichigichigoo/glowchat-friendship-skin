@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { Droplet, Leaf, ShoppingBag } from 'lucide-react';
+import MessageFeedback from './MessageFeedback';
 
 export interface SkinConcern {
   name: string;
@@ -20,14 +20,12 @@ interface SkinAnalysisReportProps {
 }
 
 const SkinAnalysisReport: React.FC<SkinAnalysisReportProps> = ({ data }) => {
-  // Function to determine hydration level text
   const getHydrationText = (level: number) => {
     if (level < 40) return 'Thấp';
     if (level < 70) return 'Trung bình';
     return 'Cao';
   };
 
-  // Function to render severity dots
   const renderSeverityDots = (severity: number) => {
     return (
       <div className="flex gap-1 items-center">
@@ -49,18 +47,20 @@ const SkinAnalysisReport: React.FC<SkinAnalysisReportProps> = ({ data }) => {
     );
   };
 
+  const handleFeedback = (feedback: 'like' | 'dislike') => {
+    console.log('Analysis feedback:', feedback);
+  };
+
   return (
     <div className="bg-white rounded-2xl shadow-md p-6 w-full max-w-md mx-auto animate-fade-in">
       <h2 className="text-xl font-semibold text-lilac-800 mb-5">Phân tích da của bạn</h2>
       
-      {/* Skin Type Tag */}
       <div className="mb-6">
         <div className="inline-flex px-3 py-1.5 bg-lilac-100 text-lilac-800 rounded-full text-sm font-medium">
           {data.skinType}
         </div>
       </div>
       
-      {/* Hydration Level */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
@@ -79,7 +79,6 @@ const SkinAnalysisReport: React.FC<SkinAnalysisReportProps> = ({ data }) => {
         </div>
       </div>
       
-      {/* Skin Concerns */}
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-3">
           <Leaf size={18} className="text-mint-500" />
@@ -99,7 +98,6 @@ const SkinAnalysisReport: React.FC<SkinAnalysisReportProps> = ({ data }) => {
         </div>
       </div>
       
-      {/* Recommendations */}
       <div>
         <div className="flex items-center gap-2 mb-3">
           <ShoppingBag size={18} className="text-peach-500" />
@@ -116,6 +114,14 @@ const SkinAnalysisReport: React.FC<SkinAnalysisReportProps> = ({ data }) => {
             </div>
           ))}
         </div>
+      </div>
+      
+      <div className="mt-6 flex justify-end">
+        <MessageFeedback
+          messageId="skin-analysis"
+          messageType="result"
+          onFeedback={handleFeedback}
+        />
       </div>
     </div>
   );
