@@ -228,11 +228,13 @@ const ChatInterface: React.FC = () => {
         {messages.map((message) => (
           <div
             key={message.id}
-            className={message.sender === 'bot' ? 'chat-bubble-bot relative' : 'chat-bubble-user relative'}
+            className={`
+              ${message.sender === 'bot' ? 'chat-bubble-bot group relative' : 'chat-bubble-user'}
+            `}
           >
             {message.text}
             {message.sender === 'bot' && (
-              <div className="absolute bottom-1 right-2">
+              <div className="absolute bottom-1 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                 <MessageFeedback
                   messageId={message.id}
                   messageType="result"
