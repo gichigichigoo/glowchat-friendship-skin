@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Message, QuickReply, initialGreeting, quickReplies, getRandomResponse } from '../utils/chatMessages';
 import { getProductsByConcern } from '../utils/productData';
@@ -8,6 +7,7 @@ import SkinAnalysisReport from './SkinAnalysisReport';
 import ChatInputBox from './ChatInputBox';
 import { useToast } from '@/hooks/use-toast';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import MessageFeedback from './MessageFeedback';
 
 const ChatInterface: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([initialGreeting]);
@@ -205,6 +205,11 @@ const ChatInterface: React.FC = () => {
     });
   };
 
+  const handleMessageFeedback = (messageId: string, feedback: 'like' | 'dislike') => {
+    console.log('Message feedback:', { messageId, feedback });
+    // This can be expanded later to store feedback in a backend
+  };
+
   return (
     <div className="flex flex-col h-full relative">
       <div className="bg-lilac-500 text-white p-4 rounded-b-2xl shadow-lg mb-4">
@@ -223,9 +228,18 @@ const ChatInterface: React.FC = () => {
         {messages.map((message) => (
           <div
             key={message.id}
-            className={message.sender === 'bot' ? 'chat-bubble-bot' : 'chat-bubble-user'}
+            className={message.sender === 'bot' ? 'chat-bubble-bot relative' : 'chat-bubble-user relative'}
           >
             {message.text}
+            {message.sender === 'bot' && (
+              <div className="absolute bottom-1 right-2">
+                <MessageFeedback
+                  messageId={message.id}
+                  messageType="result"
+                  onFeedback={(feedback) => handleMessageFeedback(message.id, feedback)}
+                />
+              </div>
+            )}
           </div>
         ))}
         
