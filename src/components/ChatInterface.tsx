@@ -5,6 +5,7 @@ import { getSkinAnalysisByConcern } from '../utils/skinAnalysisData';
 import ProductCard from './ProductCard';
 import SkinAnalysisReport from './SkinAnalysisReport';
 import ChatInputBox from './ChatInputBox';
+import LoadingBubble from './LoadingBubble';
 import { useToast } from '@/hooks/use-toast';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import MessageFeedback from './MessageFeedback';
@@ -15,12 +16,13 @@ const ChatInterface: React.FC = () => {
   const [showProducts, setShowProducts] = useState(false);
   const [showAnalysisReport, setShowAnalysisReport] = useState(false);
   const [selectedConcern, setSelectedConcern] = useState<'dry' | 'acne' | 'brightening' | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, showAnalysisReport]);
+  }, [messages, showAnalysisReport, isLoading]);
 
   const handleQuickReply = (reply: QuickReply) => {
     const userMessage: Message = {
@@ -32,8 +34,10 @@ const ChatInterface: React.FC = () => {
     
     setMessages(prev => [...prev, userMessage]);
     setShowQuickReplies(false);
+    setIsLoading(true);
     
     setTimeout(() => {
+      setIsLoading(false);
       const botResponse: Message = {
         id: `bot-${Date.now()}`,
         sender: 'bot',
@@ -45,30 +49,38 @@ const ChatInterface: React.FC = () => {
       setSelectedConcern(reply.concern);
       
       setTimeout(() => {
-        const analysisMessage: Message = {
-          id: `bot-analysis-${Date.now()}`,
-          sender: 'bot',
-          text: 'Dựa vào thông tin bạn cung cấp, mình đã phân tích làn da của bạn. Hãy xem báo cáo chi tiết dưới đây nhé! ✨',
-          timestamp: new Date(),
-        };
-        
-        setMessages(prev => [...prev, analysisMessage]);
-        
+        setIsLoading(true);
         setTimeout(() => {
-          setShowAnalysisReport(true);
+          setIsLoading(false);
+          const analysisMessage: Message = {
+            id: `bot-analysis-${Date.now()}`,
+            sender: 'bot',
+            text: 'Dựa vào thông tin bạn cung cấp, mình đã phân tích làn da của bạn. Hãy xem báo cáo chi tiết dưới đây nhé! ✨',
+            timestamp: new Date(),
+          };
+          
+          setMessages(prev => [...prev, analysisMessage]);
           
           setTimeout(() => {
-            const productMessage: Message = {
-              id: `bot-product-${Date.now()}`,
-              sender: 'bot',
-              text: 'Và đây là những sản phẩm mình đề xuất phù hợp với tình trạng da của bạn:',
-              timestamp: new Date(),
-            };
+            setShowAnalysisReport(true);
             
-            setMessages(prev => [...prev, productMessage]);
-            setShowProducts(true);
-          }, 1500);
-        }, 800);
+            setTimeout(() => {
+              setIsLoading(true);
+              setTimeout(() => {
+                setIsLoading(false);
+                const productMessage: Message = {
+                  id: `bot-product-${Date.now()}`,
+                  sender: 'bot',
+                  text: 'Và đây là những sản phẩm mình đề xuất phù hợp với tình trạng da của bạn:',
+                  timestamp: new Date(),
+                };
+                
+                setMessages(prev => [...prev, productMessage]);
+                setShowProducts(true);
+              }, 800);
+            }, 1500);
+          }, 800);
+        }, 1500);
       }, 1500);
     }, 1000);
   };
@@ -96,7 +108,9 @@ const ChatInterface: React.FC = () => {
         detectedConcern = 'dry';
       }
       
+      setIsLoading(true);
       setTimeout(() => {
+        setIsLoading(false);
         const botResponse: Message = {
           id: `bot-${Date.now()}`,
           sender: 'bot',
@@ -108,37 +122,47 @@ const ChatInterface: React.FC = () => {
         setSelectedConcern(detectedConcern);
         
         setTimeout(() => {
-          const analysisMessage: Message = {
-            id: `bot-analysis-${Date.now()}`,
-            sender: 'bot',
-            text: 'Dựa vào thông tin bạn cung cấp, mình đã phân tích làn da của bạn. Hãy xem báo cáo chi tiết dưới đây nhé! ✨',
-            timestamp: new Date(),
-          };
-          
-          setMessages(prev => [...prev, analysisMessage]);
-          
+          setIsLoading(true);
           setTimeout(() => {
-            setShowAnalysisReport(true);
+            setIsLoading(false);
+            const analysisMessage: Message = {
+              id: `bot-analysis-${Date.now()}`,
+              sender: 'bot',
+              text: 'Dựa vào thông tin bạn cung cấp, mình đã phân tích làn da của bạn. Hãy xem báo cáo chi tiết dưới đây nhé! ✨',
+              timestamp: new Date(),
+            };
+            
+            setMessages(prev => [...prev, analysisMessage]);
             
             setTimeout(() => {
-              const productMessage: Message = {
-                id: `bot-product-${Date.now()}`,
-                sender: 'bot',
-                text: 'Và đây là những sản phẩm mình đề xuất phù hợp với tình trạng da của bạn:',
-                timestamp: new Date(),
-              };
+              setShowAnalysisReport(true);
               
-              setMessages(prev => [...prev, productMessage]);
-              setShowProducts(true);
-            }, 1500);
-          }, 800);
+              setTimeout(() => {
+                setIsLoading(true);
+                setTimeout(() => {
+                  setIsLoading(false);
+                  const productMessage: Message = {
+                    id: `bot-product-${Date.now()}`,
+                    sender: 'bot',
+                    text: 'Và đây là những sản phẩm mình đề xuất phù hợp với tình trạng da của bạn:',
+                    timestamp: new Date(),
+                  };
+                  
+                  setMessages(prev => [...prev, productMessage]);
+                  setShowProducts(true);
+                }, 800);
+              }, 1500);
+            }, 800);
+          }, 1500);
         }, 1500);
       }, 1000);
       
       return;
     }
     
+    setIsLoading(true);
     setTimeout(() => {
+      setIsLoading(false);
       const botResponse: Message = {
         id: `bot-${Date.now()}`,
         sender: 'bot',
@@ -160,7 +184,9 @@ const ChatInterface: React.FC = () => {
     
     setMessages(prev => [...prev, userMessage]);
     
+    setIsLoading(true);
     setTimeout(() => {
+      setIsLoading(false);
       const analysisMessage: Message = {
         id: `bot-${Date.now()}`,
         sender: 'bot',
@@ -171,32 +197,40 @@ const ChatInterface: React.FC = () => {
       setMessages(prev => [...prev, analysisMessage]);
       
       setTimeout(() => {
-        const resultMessage: Message = {
-          id: `bot-result-${Date.now()}`,
-          sender: 'bot',
-          text: 'Dựa trên hình ảnh, mình nhận thấy làn da của bạn có dấu hiệu của da khô. Mình sẽ đưa ra phân tích chi tiết ngay đây!',
-          timestamp: new Date(),
-        };
-        
-        setMessages(prev => [...prev, resultMessage]);
-        setSelectedConcern('dry');
-        
+        setIsLoading(true);
         setTimeout(() => {
-          setShowAnalysisReport(true);
+          setIsLoading(false);
+          const resultMessage: Message = {
+            id: `bot-result-${Date.now()}`,
+            sender: 'bot',
+            text: 'Dựa trên hình ảnh, mình nhận thấy làn da của bạn có dấu hiệu của da khô. Mình sẽ đưa ra phân tích chi tiết ngay đây!',
+            timestamp: new Date(),
+          };
+          
+          setMessages(prev => [...prev, resultMessage]);
+          setSelectedConcern('dry');
           
           setTimeout(() => {
-            const productMessage: Message = {
-              id: `bot-product-${Date.now()}`,
-              sender: 'bot',
-              text: 'Và đây là những sản phẩm mình đề xuất phù hợp với tình trạng da của bạn:',
-              timestamp: new Date(),
-            };
+            setShowAnalysisReport(true);
             
-            setMessages(prev => [...prev, productMessage]);
-            setShowProducts(true);
-          }, 1500);
-        }, 800);
-      }, 2000);
+            setTimeout(() => {
+              setIsLoading(true);
+              setTimeout(() => {
+                setIsLoading(false);
+                const productMessage: Message = {
+                  id: `bot-product-${Date.now()}`,
+                  sender: 'bot',
+                  text: 'Và đây là những sản phẩm mình đề xuất phù hợp với tình trạng da của bạn:',
+                  timestamp: new Date(),
+                };
+                
+                setMessages(prev => [...prev, productMessage]);
+                setShowProducts(true);
+              }, 800);
+            }, 1500);
+          }, 800);
+        }, 2000);
+      }, 1000);
     }, 1000);
     
     toast({
@@ -244,6 +278,8 @@ const ChatInterface: React.FC = () => {
             )}
           </div>
         ))}
+        
+        {isLoading && <LoadingBubble />}
         
         {showQuickReplies && (
           <div className="py-4 px-2">

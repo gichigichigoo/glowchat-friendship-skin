@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Nunito:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
@@ -166,6 +165,19 @@
   
   .scrollbar-hide::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera */
+  }
+
+  /* Animation delay utilities */
+  .delay-0 {
+    animation-delay: 0ms;
+  }
+  
+  .delay-150 {
+    animation-delay: 150ms;
+  }
+  
+  .delay-300 {
+    animation-delay: 300ms;
   }
   
   /* Animations */
