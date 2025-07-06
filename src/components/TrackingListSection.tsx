@@ -89,12 +89,18 @@ const TrackingListSection: React.FC<TrackingListSectionProps> = ({
           <div className="flex-1">
             <h3 className="font-bold text-lg text-foreground mb-1">{item.name}</h3>
             <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
-              <span>{item.storeName}</span>
-              <span>•</span>
               <span>Thêm {new Date(item.addedAt).toLocaleDateString('vi-VN')}</span>
             </div>
-            <div className="text-lg font-semibold text-secondary-foreground">
-              {formatPrice(item.currentPrice)}
+            <div className="space-y-1">
+              <div className="text-lg font-semibold text-secondary-foreground">
+                Hiện tại: {formatPrice(item.currentPrice)}
+              </div>
+              <div className="text-sm text-muted-foreground">
+                Khi thêm: {formatPrice(item.addedPrice || item.currentPrice)}
+              </div>
+              <div className="text-sm text-green-600 font-medium">
+                Giảm: {formatPrice((item.addedPrice || item.currentPrice) - item.currentPrice)}
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-2">

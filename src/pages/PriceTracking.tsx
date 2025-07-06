@@ -78,10 +78,12 @@ const PriceTracking = () => {
   const handleAddToTracking = (item: any) => {
     const newTrackedItem = {
       id: Date.now().toString(),
-      name: 'Serum Vitamin C',
+      name: 'Serum Vitamin C La Roche-Posay',
       url: productUrl,
       currentPrice: item.currentPrice,
+      addedPrice: item.currentPrice,
       storeName: item.storeName,
+      storeLogo: item.storeLogo,
       addedAt: new Date()
     };
 

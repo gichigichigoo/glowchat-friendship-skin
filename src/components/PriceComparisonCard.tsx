@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ExternalLink, TrendingDown } from 'lucide-react';
+import { ExternalLink, TrendingDown, ChevronDown } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -37,64 +37,91 @@ const PriceComparisonCard: React.FC<PriceComparisonCardProps> = ({
   return (
     <Card className={`transition-all duration-300 ${isTracked ? 'border-secondary bg-secondary/20' : 'hover:shadow-md'}`}>
       <CardContent className="p-4">
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex items-center gap-3">
-            <div className="w-16 h-16 flex-shrink-0 bg-gray-100 rounded-xl flex items-center justify-center">
-              <div className="text-2xl">{item.storeLogo}</div>
-            </div>
-            <div className="flex-1">
-              <h3 className="font-semibold text-lg text-foreground">{item.storeName}</h3>
-              <p className="text-sm text-muted-foreground">{item.lastUpdated}</p>
+        {/* Platform Logo - Top Right */}
+        <div className="flex justify-between items-start mb-4">
+          <div></div>
+          <div className="text-2xl">{item.storeLogo}</div>
+        </div>
+        
+        {/* Two Column Layout */}
+        <div className="flex gap-4">
+          {/* Product Image - Left Column (40% width) */}
+          <div className="w-2/5 flex-shrink-0">
+            <div className="aspect-square bg-gray-100 rounded-xl flex items-center justify-center max-h-[120px] sm:max-h-[100px]">
+              <div className="text-4xl">🧴</div>
             </div>
           </div>
-          <div className="flex gap-2 flex-wrap">
-            {item.isBestPrice && (
-              <Badge className="bg-peach-100 text-peach-700 hover:bg-peach-200">
-                Giá thấp nhất
-              </Badge>
-            )}
-            {isTracked && (
-              <div className="flex items-center gap-1">
-                <Badge className="bg-secondary text-secondary-foreground hover:bg-secondary/80">
-                  Đang theo dõi
+          
+          {/* Content - Right Column */}
+          <div className="flex-1 space-y-3">
+            {/* Product Name */}
+            <h3 className="text-lg font-bold text-foreground leading-tight">
+              Serum Vitamin C La Roche-Posay
+            </h3>
+            
+            {/* Badges */}
+            <div className="flex gap-2 flex-wrap">
+              {item.isBestPrice && (
+                <Badge className="bg-green-100 text-green-700 hover:bg-green-200">
+                  Giá thấp nhất
+                </Badge>
+              )}
+              {isTracked && (
+                <div className="flex items-center gap-1">
+                  <Badge className="bg-secondary text-secondary-foreground hover:bg-secondary/80">
+                    Đang theo dõi
+                  </Badge>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-6 w-6"
+                    onClick={onViewTrackingList}
+                  >
+                    <ChevronDown className="h-4 w-4" />
+                  </Button>
+                </div>
+              )}
+            </div>
+            
+            {/* Last Updated */}
+            <p className="text-sm text-muted-foreground">{item.lastUpdated}</p>
+            
+            {/* Price Info */}
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground line-through">
+                  {formatPrice(item.previousPrice)}
+                </span>
+                <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
+                  <TrendingDown className="w-3 h-3 mr-1" />
+                  -{formatPrice(item.discount)}
                 </Badge>
               </div>
-            )}
+              <div className="text-2xl font-bold text-secondary-foreground">
+                {formatPrice(item.currentPrice)}
+              </div>
+            </div>
+            
+            {/* Action Buttons */}
+            <div className="flex gap-2 pt-2">
+              <Button
+                variant="outline"
+                className="flex-1 gap-2"
+                onClick={() => window.open(item.productUrl, '_blank')}
+              >
+                <ExternalLink className="w-4 h-4" />
+                Mua ngay
+              </Button>
+              <Button
+                className={`flex-1 ${isTracked ? '' : 'bg-lilac-500 hover:bg-lilac-600'}`}
+                onClick={handleAddToTracking}
+                disabled={isTracked}
+                variant={isTracked ? "outline" : "default"}
+              >
+                {isTracked ? 'Đã thêm vào danh sách theo dõi' : 'Thêm vào danh sách theo dõi'}
+              </Button>
+            </div>
           </div>
-        </div>
-
-        <div className="space-y-2 mb-4">
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground line-through">
-              {formatPrice(item.previousPrice)}
-            </span>
-            <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
-              <TrendingDown className="w-3 h-3 mr-1" />
-              -{formatPrice(item.discount)}
-            </Badge>
-          </div>
-          <div className="text-2xl font-bold text-secondary-foreground">
-            {formatPrice(item.currentPrice)}
-          </div>
-        </div>
-
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            className="flex-1 gap-2"
-            onClick={() => window.open(item.productUrl, '_blank')}
-          >
-            <ExternalLink className="w-4 h-4" />
-            Mua ngay
-          </Button>
-          <Button
-            className={`flex-1 ${isTracked ? '' : 'bg-lilac-500 hover:bg-lilac-600'}`}
-            onClick={handleAddToTracking}
-            disabled={isTracked}
-            variant={isTracked ? "outline" : "default"}
-          >
-            {isTracked ? 'Đã thêm vào danh sách theo dõi' : 'Thêm vào danh sách theo dõi'}
-          </Button>
         </div>
       </CardContent>
     </Card>
