@@ -132,7 +132,7 @@ const PriceComparisonCard: React.FC<PriceComparisonCardProps> = ({
                 disabled={isTracked}
                 variant={isTracked ? "outline" : "default"}
               >
-                {isTracked ? 'Đã thêm vào danh sách theo dõi' : 'Theo dõi'}
+                {isTracked ? 'Đã theo dõi' : 'Theo dõi'}
               </Button>
             </div>
           </div>
