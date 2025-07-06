@@ -1,7 +1,9 @@
 
 import React, { useState } from 'react';
-import { Search, X, MessageCircle, ChevronRight, Settings } from 'lucide-react';
+import { Search, X, MessageCircle, ChevronRight, Settings, Tag } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { 
   Sidebar, 
   SidebarContent, 
@@ -43,6 +45,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
   onLogout,
   activeChatId
 }) => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -83,6 +86,18 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
     <>
       <Sidebar>
         <SidebarHeader className="p-4">
+          {/* Price Tracking Entry Point */}
+          <div className="mb-4">
+            <Button
+              onClick={() => navigate('/price-tracking')}
+              className="w-full justify-start gap-3 bg-gradient-to-r from-peach-100 to-lilac-100 text-lilac-800 hover:from-peach-200 hover:to-lilac-200 border border-lilac-200"
+              variant="outline"
+            >
+              <Tag className="h-4 w-4" />
+              Theo dõi giá sản phẩm
+            </Button>
+          </div>
+          
           <div className="flex items-center mb-4">
             <h2 className="text-lg font-semibold flex-1">Lịch sử trò chuyện</h2>
             <button 
