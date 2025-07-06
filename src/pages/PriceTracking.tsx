@@ -88,7 +88,7 @@ const PriceTracking = () => {
     setTrackingList(prev => [newTrackedItem, ...prev]);
     
     toast({
-      title: "Đã thêm vào danh sách theo dõi ✓",
+      title: "🎉 Theo dõi thành công rồi nè!",
       description: "Bạn sẽ nhận thông báo khi có thay đổi giá"
     });
 

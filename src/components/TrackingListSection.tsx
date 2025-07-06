@@ -49,18 +49,14 @@ const TrackingListSection: React.FC<TrackingListSectionProps> = ({
         {trackingList.length > 0 && (
           <Button
             variant="ghost"
-            size="sm"
+            size="icon"
             onClick={() => setShowTrackingList(!showTrackingList)}
-            className="gap-2"
+            className="h-8 w-8"
           >
             {showTrackingList ? (
-              <>
-                Thu gọn <ChevronUp className="w-4 h-4" />
-              </>
+              <ChevronUp className="w-4 h-4" />
             ) : (
-              <>
-                Mở rộng <ChevronDown className="w-4 h-4" />
-              </>
+              <ChevronDown className="w-4 h-4" />
             )}
           </Button>
         )}
@@ -82,54 +78,57 @@ const TrackingListSection: React.FC<TrackingListSectionProps> = ({
               <Card 
                 key={item.id} 
                 className={`transition-all duration-300 ${
-                  index === 0 ? 'border-mint-200 shadow-md' : ''
+                  index === 0 ? 'border-secondary shadow-md' : ''
                 }`}
               >
                 <CardContent className="p-4">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <h3 className="font-medium mb-1">{item.name}</h3>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
-                        <span>{item.storeName}</span>
-                        <span>•</span>
-                        <span>Thêm {new Date(item.addedAt).toLocaleDateString('vi-VN')}</span>
-                      </div>
-                      <div className="text-lg font-semibold text-mint-600">
-                        {formatPrice(item.currentPrice)}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="gap-2"
-                      >
-                        Xem chi tiết
-                      </Button>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem 
-                            onClick={() => window.open(item.url, '_blank')}
-                            className="gap-2"
-                          >
-                            <ExternalLink className="h-4 w-4" />
-                            Xem sản phẩm
-                          </DropdownMenuItem>
-                          <DropdownMenuItem 
-                            onClick={() => handleRemoveFromTracking(item.id)}
-                            className="gap-2 text-destructive focus:text-destructive"
-                          >
-                            Xóa khỏi danh sách theo dõi
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  </div>
+        <div className="flex gap-4">
+          <div className="w-20 h-20 flex-shrink-0 bg-gray-100 rounded-xl flex items-center justify-center">
+            <div className="text-2xl">{item.storeLogo}</div>
+          </div>
+          <div className="flex-1">
+            <h3 className="font-bold text-lg text-foreground mb-1">{item.name}</h3>
+            <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
+              <span>{item.storeName}</span>
+              <span>•</span>
+              <span>Thêm {new Date(item.addedAt).toLocaleDateString('vi-VN')}</span>
+            </div>
+            <div className="text-lg font-semibold text-secondary-foreground">
+              {formatPrice(item.currentPrice)}
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2"
+            >
+              Xem chi tiết
+            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem 
+                  onClick={() => window.open(item.url, '_blank')}
+                  className="gap-2"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  Xem sản phẩm
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => handleRemoveFromTracking(item.id)}
+                  className="gap-2 text-destructive focus:text-destructive"
+                >
+                  Xóa khỏi danh sách theo dõi
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
                 </CardContent>
               </Card>
             ))}
