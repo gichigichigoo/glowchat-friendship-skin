@@ -39,7 +39,10 @@ const PriceComparisonCard: React.FC<PriceComparisonCardProps> = ({
     <Card className={`transition-all duration-300 ${isTracked ? 'border-secondary bg-secondary/20' : 'hover:shadow-md'}`}>
       <CardContent className="p-4">
         {/* Platform Info - Top Left */}
-        <div className="flex justify-start items-start mb-4">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-6 h-6 bg-muted rounded-full flex items-center justify-center flex-shrink-0">
+            <div className="text-xs">🏪</div>
+          </div>
           <div className="text-sm text-muted-foreground">
             {item.storeName}
           </div>
@@ -49,13 +52,13 @@ const PriceComparisonCard: React.FC<PriceComparisonCardProps> = ({
         <div className="flex gap-4">
           {/* Product Image - Left Column (40% width) */}
           <div className="w-2/5 flex-shrink-0">
-            <div className="aspect-square bg-gray-100 rounded-xl flex items-center justify-center max-h-[120px] sm:max-h-[100px]">
+            <div className="aspect-square bg-muted rounded-xl flex items-center justify-center max-h-[120px] sm:max-h-[100px] w-full">
               <div className="text-4xl">🧴</div>
             </div>
           </div>
           
-          {/* Content - Right Column */}
-          <div className="flex-1 space-y-3">
+          {/* Content - Right Column with 16px padding from image */}
+          <div className="flex-1 space-y-3 pl-4">
             {/* Product Name */}
             <h3 className="text-lg font-bold text-foreground leading-tight">
               Serum Vitamin C La Roche-Posay

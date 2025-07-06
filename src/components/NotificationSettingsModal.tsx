@@ -24,11 +24,11 @@ const NotificationSettingsModal: React.FC<NotificationSettingsModalProps> = ({
 }) => {
   const { toast } = useToast();
   const [settings, setSettings] = useState({
-    priceChange: false,
+    priceChange: true,  // Default selected
     percentageDiscount: false,
     amountDiscount: false,
     webPush: false,
-    email: false,
+    email: true,  // Default selected
     percentageValue: 15,
     amountValue: 50000
   });

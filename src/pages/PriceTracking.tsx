@@ -162,7 +162,7 @@ const PriceTracking = () => {
                 disabled={isLoading}
                 className="bg-lilac-500 hover:bg-lilac-600"
               >
-                {isLoading ? 'Đang tìm...' : 'Tìm giá'}
+                {isLoading ? 'Đang tìm...' : 'Xem giá tốt nhất'}
               </Button>
             </div>
 
@@ -201,8 +201,16 @@ const PriceTracking = () => {
                 variant="ghost"
                 className="text-lilac-600 hover:text-lilac-700 underline"
                 onClick={() => {
-                  // Add logic to track at all platforms
+                  // Track all platforms at once
                   priceData.forEach(item => handleAddToTracking(item));
+                  
+                  // Update all cards to show tracked state
+                  setPriceData(prev => prev.map(p => ({ ...p, isTracked: true })));
+                  
+                  // Show success toast
+                  toast({
+                    title: "🎉 Tất cả sản phẩm đã được theo dõi trên mọi sàn!"
+                  });
                 }}
               >
                 Theo dõi ở tất cả sàn
