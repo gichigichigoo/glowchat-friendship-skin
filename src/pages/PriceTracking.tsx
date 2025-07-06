@@ -195,7 +195,19 @@ const PriceTracking = () => {
         {/* Price Comparison Results */}
         {showResults && !isLoading && (
           <div className="space-y-4 mb-8">
-            <h2 className="text-lg font-semibold">Kết quả tìm kiếm</h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold">Kết quả tìm kiếm</h2>
+              <Button
+                variant="ghost"
+                className="text-lilac-600 hover:text-lilac-700 underline"
+                onClick={() => {
+                  // Add logic to track at all platforms
+                  priceData.forEach(item => handleAddToTracking(item));
+                }}
+              >
+                Theo dõi ở tất cả sàn
+              </Button>
+            </div>
             {priceData.length > 0 ? (
               <div className="space-y-3">
                 {priceData.map((item) => (

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { ExternalLink, TrendingDown, ChevronDown } from 'lucide-react';
+import { ExternalLink, TrendingDown, ArrowRight } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
 
 interface PriceComparisonCardProps {
   item: {
@@ -37,10 +38,11 @@ const PriceComparisonCard: React.FC<PriceComparisonCardProps> = ({
   return (
     <Card className={`transition-all duration-300 ${isTracked ? 'border-secondary bg-secondary/20' : 'hover:shadow-md'}`}>
       <CardContent className="p-4">
-        {/* Platform Logo - Top Right */}
-        <div className="flex justify-between items-start mb-4">
-          <div></div>
-          <div className="text-2xl">{item.storeLogo}</div>
+        {/* Platform Info - Top Left */}
+        <div className="flex justify-start items-start mb-4">
+          <div className="text-sm text-muted-foreground">
+            {item.storeName}
+          </div>
         </div>
         
         {/* Two Column Layout */}
@@ -71,14 +73,23 @@ const PriceComparisonCard: React.FC<PriceComparisonCardProps> = ({
                   <Badge className="bg-secondary text-secondary-foreground hover:bg-secondary/80">
                     Đang theo dõi
                   </Badge>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-6 w-6"
-                    onClick={onViewTrackingList}
-                  >
-                    <ChevronDown className="h-4 w-4" />
-                  </Button>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6"
+                          onClick={onViewTrackingList}
+                        >
+                          <ArrowRight className="h-4 w-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Xem trong danh sách theo dõi</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
               )}
             </div>
@@ -118,7 +129,7 @@ const PriceComparisonCard: React.FC<PriceComparisonCardProps> = ({
                 disabled={isTracked}
                 variant={isTracked ? "outline" : "default"}
               >
-                {isTracked ? 'Đã thêm vào danh sách theo dõi' : 'Thêm vào danh sách theo dõi'}
+                {isTracked ? 'Đã thêm vào danh sách theo dõi' : 'Theo dõi'}
               </Button>
             </div>
           </div>
