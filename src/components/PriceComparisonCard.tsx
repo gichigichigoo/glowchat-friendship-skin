@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ExternalLink, TrendingDown, ArrowRight } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -30,6 +30,12 @@ const PriceComparisonCard: React.FC<PriceComparisonCardProps> = ({
   formatPrice
 }) => {
   const [isTracked, setIsTracked] = useState(item.isTracked || false);
+  
+  // Sync local state with prop changes (for global tracking)
+  useEffect(() => {
+    setIsTracked(item.isTracked || false);
+  }, [item.isTracked]);
+  
   const handleAddToTracking = () => {
     onAddToTracking(item);
     setIsTracked(true);
