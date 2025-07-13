@@ -3,7 +3,7 @@ import { ExternalLink, TrendingDown, ArrowRight } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface PriceComparisonCardProps {
   item: {
@@ -21,13 +21,15 @@ interface PriceComparisonCardProps {
   onAddToTracking: (item: any) => void;
   onViewTrackingList: () => void;
   formatPrice: (price: number) => string;
+  isTrackingLimitReached?: boolean;
 }
 
 const PriceComparisonCard: React.FC<PriceComparisonCardProps> = ({
   item,
   onAddToTracking,
   onViewTrackingList,
-  formatPrice
+  formatPrice,
+  isTrackingLimitReached = false
 }) => {
   const [isTracked, setIsTracked] = useState(item.isTracked || false);
   
@@ -132,14 +134,33 @@ const PriceComparisonCard: React.FC<PriceComparisonCardProps> = ({
                 <ExternalLink className="w-4 h-4" />
                 Mua ngay
               </Button>
-              <Button
-                className={`flex-1 ${isTracked ? '' : 'bg-lilac-500 hover:bg-lilac-600'}`}
-                onClick={handleAddToTracking}
-                disabled={isTracked}
-                variant={isTracked ? "outline" : "default"}
-              >
-                {isTracked ? 'Đã theo dõi' : 'Theo dõi'}
-              </Button>
+              {isTrackingLimitReached && !isTracked ? (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        className="flex-1"
+                        disabled={true}
+                        variant="outline"
+                      >
+                        Theo dõi
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Đã đạt giới hạn theo dõi.</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ) : (
+                <Button
+                  className={`flex-1 ${isTracked ? '' : 'bg-lilac-500 hover:bg-lilac-600'}`}
+                  onClick={handleAddToTracking}
+                  disabled={isTracked}
+                  variant={isTracked ? "outline" : "default"}
+                >
+                  {isTracked ? 'Đã theo dõi' : 'Theo dõi'}
+                </Button>
+              )}
             </div>
           </div>
         </div>
