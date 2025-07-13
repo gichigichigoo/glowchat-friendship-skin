@@ -100,15 +100,10 @@ const PriceTracking = () => {
     setAlreadyTracking(false);
     setShowSuggestions(false);
 
-    // Simulate API call
+    // Simulate API call - show results for any search term for demo
     setTimeout(() => {
-      if (searchTerm.toLowerCase().includes('serum') || searchTerm.toLowerCase().includes('vitamin')) {
-        setPriceData(mockPriceData);
-        setShowResults(true);
-      } else {
-        setPriceData([]);
-        setShowResults(true);
-      }
+      setPriceData(mockPriceData);
+      setShowResults(true);
       setIsLoading(false);
     }, 2000);
   };
