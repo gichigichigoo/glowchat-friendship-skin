@@ -14,7 +14,7 @@ import NotificationSettingsModal from '@/components/NotificationSettingsModal';
 // Mock data for demonstration
 const mockPriceData = [
   {
-    id: '1',
+    id: 'product-1-shopee',
     storeName: 'Shopee',
     storeLogo: '🛒',
     currentPrice: 189000,
@@ -25,7 +25,7 @@ const mockPriceData = [
     productUrl: 'https://shopee.vn/sample'
   },
   {
-    id: '2',
+    id: 'product-1-tiki',
     storeName: 'Tiki',
     storeLogo: '🏪',
     currentPrice: 199000,
