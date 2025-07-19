@@ -173,32 +173,22 @@ const PriceTracking = () => {
   };
 
   const handleViewTrackingList = (highlightItemId?: string) => {
-    console.log('handleViewTrackingList called with:', highlightItemId);
-    console.log('Current tracking list:', trackingList);
     setShowTrackingList(true);
     if (highlightItemId) {
       setHighlightedItemId(highlightItemId);
       // Remove highlight after 3 seconds
       setTimeout(() => setHighlightedItemId(null), 3000);
       
-      // Scroll to the specific item in the drawer
+      // Scroll to the specific item in the drawer - wait longer for DOM update
       setTimeout(() => {
-        console.log('Looking for element with data-item-id:', highlightItemId);
         const targetElement = document.querySelector(`[data-item-id="${highlightItemId}"]`);
-        console.log('Found target element:', targetElement);
         if (targetElement) {
           targetElement.scrollIntoView({ 
             behavior: 'smooth',
             block: 'center'
           });
-        } else {
-          console.log('No element found with data-item-id:', highlightItemId);
-          console.log('Available elements:');
-          document.querySelectorAll('[data-item-id]').forEach(el => {
-            console.log('- Element with data-item-id:', el.getAttribute('data-item-id'));
-          });
         }
-      }, 300); // Wait for drawer to open
+      }, 500); // Increased timeout to ensure DOM is updated
     }
   };
 
