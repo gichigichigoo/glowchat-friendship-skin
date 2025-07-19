@@ -137,7 +137,7 @@ const PriceTracking = () => {
     }
 
     const newTrackedItem = {
-      id: Date.now().toString(),
+      id: item.id, // Use the same ID as the search result item
       name: searchQuery || 'Serum Vitamin C La Roche-Posay',
       url: `search:${searchQuery}`,
       currentPrice: item.currentPrice,
@@ -178,13 +178,18 @@ const PriceTracking = () => {
       setHighlightedItemId(highlightItemId);
       // Remove highlight after 3 seconds
       setTimeout(() => setHighlightedItemId(null), 3000);
+      
+      // Scroll to the specific item in the drawer
+      setTimeout(() => {
+        const targetElement = document.querySelector(`[data-item-id="${highlightItemId}"]`);
+        if (targetElement) {
+          targetElement.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'center'
+          });
+        }
+      }, 300); // Wait for drawer to open
     }
-    // Smooth scroll to tracking list section
-    setTimeout(() => {
-      document.getElementById('tracking-list-section')?.scrollIntoView({ 
-        behavior: 'smooth' 
-      });
-    }, 100);
   };
 
   const formatPrice = (price: number) => {

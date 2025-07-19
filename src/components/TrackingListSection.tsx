@@ -79,6 +79,7 @@ const TrackingListSection: React.FC<TrackingListSectionProps> = ({
             {trackingList.map((item, index) => (
               <Card 
                 key={item.id} 
+                data-item-id={item.id}
                 className={`transition-all duration-300 ${
                   index === 0 ? 'border-secondary shadow-md' : ''
                 } ${

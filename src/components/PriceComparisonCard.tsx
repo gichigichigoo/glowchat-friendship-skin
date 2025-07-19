@@ -19,7 +19,7 @@ interface PriceComparisonCardProps {
     isTracked?: boolean;
   };
   onAddToTracking: (item: any) => void;
-  onViewTrackingList: () => void;
+  onViewTrackingList: (highlightItemId?: string) => void;
   formatPrice: (price: number) => string;
   isTrackingLimitReached?: boolean;
 }
@@ -91,7 +91,7 @@ const PriceComparisonCard: React.FC<PriceComparisonCardProps> = ({
                           variant="ghost"
                           size="icon"
                           className="h-6 w-6"
-                          onClick={onViewTrackingList}
+                          onClick={() => onViewTrackingList(item.id)}
                         >
                           <ArrowRight className="h-4 w-4" />
                         </Button>
