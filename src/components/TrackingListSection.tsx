@@ -16,6 +16,7 @@ interface TrackingListSectionProps {
   setShowTrackingList: (show: boolean) => void;
   setTrackingList: (updater: (prev: any[]) => any[]) => void;
   formatPrice: (price: number) => string;
+  highlightedItemId?: string | null;
 }
 
 const TrackingListSection: React.FC<TrackingListSectionProps> = ({
@@ -23,7 +24,8 @@ const TrackingListSection: React.FC<TrackingListSectionProps> = ({
   showTrackingList,
   setShowTrackingList,
   setTrackingList,
-  formatPrice
+  formatPrice,
+  highlightedItemId
 }) => {
   const { toast } = useToast();
 
@@ -79,6 +81,8 @@ const TrackingListSection: React.FC<TrackingListSectionProps> = ({
                 key={item.id} 
                 className={`transition-all duration-300 ${
                   index === 0 ? 'border-secondary shadow-md' : ''
+                } ${
+                  highlightedItemId === item.id ? 'border-primary shadow-lg animate-pulse' : ''
                 }`}
               >
                 <CardContent className="p-4">

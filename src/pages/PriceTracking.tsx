@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Tag, Settings, ExternalLink, MoreHorizontal, TrendingDown, TrendingUp, Search, Clipboard } from 'lucide-react';
+import { ArrowLeft, Tag, Settings, ExternalLink, MoreHorizontal, TrendingDown, TrendingUp, Search, Clipboard, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -65,6 +65,7 @@ const PriceTracking = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [alreadyTracking, setAlreadyTracking] = useState(false);
   const [isSearchMode, setIsSearchMode] = useState(false);
+  const [highlightedItemId, setHighlightedItemId] = useState<string | null>(null);
 
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -151,12 +152,12 @@ const PriceTracking = () => {
     toast({
       title: "🎉 Theo dõi thành công rồi nè!",
       description: (
-        <div className="flex items-center gap-2">
-          <span>Bạn sẽ nhận thông báo khi có thay đổi giá</span>
+        <div className="space-y-2">
+          <p>Bạn sẽ nhận thông báo khi có thay đổi giá.</p>
           <Button
             variant="link"
             size="sm"
-            className="h-auto p-0 text-xs underline"
+            className="h-auto p-0 text-sm underline font-medium"
             onClick={() => setIsSettingsOpen(true)}
           >
             🔧 Sửa thông báo
@@ -171,8 +172,13 @@ const PriceTracking = () => {
     ));
   };
 
-  const handleViewTrackingList = () => {
+  const handleViewTrackingList = (highlightItemId?: string) => {
     setShowTrackingList(true);
+    if (highlightItemId) {
+      setHighlightedItemId(highlightItemId);
+      // Remove highlight after 3 seconds
+      setTimeout(() => setHighlightedItemId(null), 3000);
+    }
     // Smooth scroll to tracking list section
     setTimeout(() => {
       document.getElementById('tracking-list-section')?.scrollIntoView({ 
@@ -193,19 +199,23 @@ const PriceTracking = () => {
           <>
             {/* Search Mode Header with Breadcrumb */}
             <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={handleBackToHome}
-                  className="hover:bg-lilac-100"
-                >
-                  <ArrowLeft className="h-5 w-5" />
-                </Button>
-                <div className="flex items-center gap-2">
-                  <Tag className="h-5 w-5 text-lilac-600" />
-                  <h1 className="text-xl font-semibold">Theo dõi giá sản phẩm</h1>
+              <div className="flex flex-col gap-2">
+                {/* Breadcrumb */}
+                <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleBackToHome}
+                    className="h-auto p-1 hover:bg-lilac-100"
+                    title="Về trang theo dõi sản phẩm"
+                  >
+                    <Tag className="h-4 w-4" />
+                  </Button>
+                  <ChevronRight className="h-3 w-3" />
+                  <span>Kết quả tìm kiếm</span>
                 </div>
+                {/* Page Title */}
+                <h1 className="text-xl font-semibold">Theo dõi giá sản phẩm</h1>
               </div>
               <div className="flex items-center gap-2">
                 <Drawer>
@@ -224,20 +234,21 @@ const PriceTracking = () => {
                       )}
                     </Button>
                   </DrawerTrigger>
-                  <DrawerContent>
-                    <DrawerHeader>
-                      <DrawerTitle>Danh sách đang theo dõi</DrawerTitle>
-                    </DrawerHeader>
-                    <div className="p-4">
-                      <TrackingListSection
-                        trackingList={trackingList}
-                        showTrackingList={true}
-                        setShowTrackingList={() => {}}
-                        setTrackingList={setTrackingList}
-                        formatPrice={formatPrice}
-                      />
-                    </div>
-                  </DrawerContent>
+                    <DrawerContent>
+                      <DrawerHeader>
+                        <DrawerTitle>Danh sách đang theo dõi</DrawerTitle>
+                      </DrawerHeader>
+                      <div className="p-4">
+                        <TrackingListSection
+                          trackingList={trackingList}
+                          showTrackingList={true}
+                          setShowTrackingList={() => {}}
+                          setTrackingList={setTrackingList}
+                          formatPrice={formatPrice}
+                          highlightedItemId={highlightedItemId}
+                        />
+                      </div>
+                    </DrawerContent>
                 </Drawer>
                 <Button
                   variant="outline"
@@ -315,65 +326,7 @@ const PriceTracking = () => {
             {/* Search Results */}
             {showResults && !isLoading && (
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-semibold">Kết quả tìm kiếm</h2>
-                  <Button
-                    variant="ghost"
-                    className="text-lilac-600 hover:text-lilac-700 underline"
-                    disabled={trackingList.length >= MAX_TRACKING_ITEMS}
-                    onClick={() => {
-                      // Check if adding all items would exceed the limit
-                      const newItemsCount = priceData.filter(item => !item.isTracked).length;
-                      if (trackingList.length + newItemsCount > MAX_TRACKING_ITEMS) {
-                        toast({
-                          title: "Bạn chỉ có thể theo dõi tối đa 10 sản phẩm cùng lúc.",
-                          variant: "destructive"
-                        });
-                        return;
-                      }
-
-                      // Track all platforms at once
-                      priceData.forEach(item => {
-                        if (!item.isTracked) {
-                          const newTrackedItem = {
-                            id: Date.now().toString() + item.id,
-                            name: searchQuery || 'Serum Vitamin C La Roche-Posay',
-                            url: `search:${searchQuery}`,
-                            currentPrice: item.currentPrice,
-                            addedPrice: item.currentPrice,
-                            storeName: item.storeName,
-                            storeLogo: item.storeLogo,
-                            addedAt: new Date()
-                          };
-                          setTrackingList(prev => [newTrackedItem, ...prev]);
-                        }
-                      });
-                      
-                      // Update all cards to show tracked state
-                      setPriceData(prev => prev.map(p => ({ ...p, isTracked: true })));
-                      
-                      // Show success toast with notification settings link
-                      toast({
-                        title: "🎉 Tất cả sản phẩm đã được theo dõi trên mọi sàn!",
-                        description: (
-                          <div className="flex items-center gap-2">
-                            <span>Bạn sẽ nhận thông báo khi có thay đổi giá</span>
-                            <Button
-                              variant="link"
-                              size="sm"
-                              className="h-auto p-0 text-xs underline"
-                              onClick={() => setIsSettingsOpen(true)}
-                            >
-                              🔧 Sửa thông báo
-                            </Button>
-                          </div>
-                        )
-                      });
-                    }}
-                  >
-                    Theo dõi ở tất cả sàn
-                  </Button>
-                </div>
+                <h2 className="text-lg font-semibold">Kết quả tìm kiếm</h2>
                 {priceData.length > 0 ? (
                   <div className="space-y-3">
                     {priceData.map((item) => (
@@ -381,7 +334,7 @@ const PriceTracking = () => {
                         key={item.id}
                         item={item}
                         onAddToTracking={handleAddToTracking}
-                        onViewTrackingList={() => {}}
+                        onViewTrackingList={handleViewTrackingList}
                         formatPrice={formatPrice}
                         isTrackingLimitReached={trackingList.length >= MAX_TRACKING_ITEMS}
                       />
